@@ -64,40 +64,46 @@ Prefix it with whatever you want (here "imagefit" for example) :
     )
 
 
-## Configuration
-
-
-#### Root path
-
-You MUST specify the path to the root folder of your images.
-The url your specify in your model will be concatenated to this IMAGEFIT_ROOT
-to find the appropriate image on your system.
-
-	IMAGEFIT_ROOT = "/root/to/image/base/dir"
-
-
-Congratulations, you're done !
+Congratulations, you're all set !
 
 
 ## Usage
 
 your_template.html
 
-	{% load imagefit %}
-	
-	<img src="{{ "/static/image.png"|resize:'thumbnail' }}" />
-	<img src="{{ "/static/image.png"|resize:'320x240' }}" />
+    {% load imagefit %}
+    
+    <img src="{{ "/static/image.png"|resize:'thumbnail' }}" />
+    <img src="{{ "/static/image.png"|resize:'320x240' }}" />
 
 This will display your /static/image.png in the thumbnail format (80 x 80 px)
 and below in a custom 320 x 240 pixels.
 
-## Advanced configuration
+
+## Configuration
+
+
+#### Root path
+
+You should most probably customize the path to the root folder of your images.
+The url your specify in your model will be concatenated to this IMAGEFIT_ROOT
+to find the appropriate image on your system.
+
+The path will be relative to the project folder.
+
+If starting with a "/", it will be an absolute path (quid about Windows).
+
+	IMAGEFIT_ROOT = "public"
+
+So with this example the image url "/static/image.png" would be pointing to
+/PATH/TO/YOUR/PROJECT/**public/static/image.png**
+
 
 #### Presets
 
 Presets are configuration names that hold width and height (and maybe more later on).
-Imagefit is already shipped with 3 presets : "thumbnail" (80x80), 
-"medium" (320x240) and "original" (no resizing).
+Imagefit is already shipped with 3 presets : "thumbnail" (80x80),"medium" (320x240)
+and "original" (no resizing).
 
 You may override them through settings.py
 
@@ -109,6 +115,25 @@ Custom presets examples :
         'my_preset1': {'width': 300, 'height': 220},
         'my_preset2': {'width': 100},
     }
+
+
+#### Cache
+
+Because resizing an image on the fly is a big process, django cache is enabled by default.
+
+You can customize the default cache preferences by overriding default values described below
+via settings.py :
+
+    IMAGEFIT_CACHE_ENABLED = True
+    IMAGEFIT_CACHE_BACKEND_NAME = 'imagefit'
+    CACHES = {
+        'imagefit': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': os.path.join(tempfile.gettempdir(), 'django_imagefit')
+            }
+        }
+
+Note that CACHES default values will be merge with yours from settings.py
 
 
 ## troubleshooting
@@ -129,5 +154,7 @@ If so :
 
 ## Todo
 
-* Use cache
+* Refactor views.resize
 * Make resize quality/speed configurable
+* More examples for doc
+* enable URL images in addition to system files
