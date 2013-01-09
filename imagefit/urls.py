@@ -1,5 +1,7 @@
 from django.conf.urls import url, patterns
 
 urlpatterns = patterns('',
-    url(r'^resize/(?P<format>[\w-]+)/(?P<url>.*)$', 'imagefit.views.resize', name="imagefit_resize"),
+    url(r'^(?P<path_name>[\w_-]+)/(?P<format>[\w-]+)/(?P<url>.*)/?$',
+        'imagefit.views.resize',
+        name="imagefit_resize"),
 )

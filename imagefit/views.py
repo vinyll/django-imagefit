@@ -11,11 +11,18 @@ import os
 cache = get_cache(settings.IMAGEFIT_CACHE_BACKEND_NAME)
 
 
-def resize(request, format, url):
-    
+def resize(request, path_name, format, url):
+    if path_name == 'static_resize':
+        prefix = settings.STATIC_ROOT
+    elif path_name == 'media_resize':
+        prefix = settings.MEDIA_ROOT
+    else:
+        prefix = settings.IMAGEFIT_ROOT
+
     # generate Image instance
-    image = Image(path=os.path.join(settings.IMAGEFIT_ROOT, url))
-    
+    print settings.IMAGEFIT_ROOT, url
+    image = Image(path=os.path.join(prefix, url))
+
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
         image.cached_name = request.META.get('PATH_INFO')
@@ -27,19 +34,17 @@ def resize(request, format, url):
                 )
 
     ## retrieve preset from format argument
-    preset = Presets.get(format)
+    preset = Presets.get(format) or Presets.from_string(format)
     if not preset:
-        preset = Presets.from_string(format)
-    else:
         raise ImproperlyConfigured(
             " \"%s\" is neither a \"WIDTHxHEIGHT\" format nor a key in IMAGEFIT_PRESETS." \
             % format
             )
-    
+
     # Resize and cache image
     image.resize(preset.get('width'), preset.get('height'))
     image.save()
-    
+
     return HttpResponse(
             image.render(),
             image.mimetype

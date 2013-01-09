@@ -1,11 +1,28 @@
 from django.template import Library
+from django.conf import settings
 
 register = Library()
 
 @register.filter
-def resize(value, size):
+def resize(value, size, root_name='resize'):
     """
-    Generates the url for the resized image
+    Generates the url for the resized image prefixing with prefix_path
     return string url
     """
-    return "/imagefit/resize/%s%s" % (size, value)
+    return "/imagefit/%s/%s%s" % (root_name, size, value)
+
+@register.filter
+def media_resize(value, size):
+    """
+    Generates the url for the resized image prefixing with MEDIA_ROOT
+    return string url
+    """
+    return resize(value, size, 'media_resize')
+
+@register.filter
+def static_resize(value, size):
+    """
+    Generates the url for the resized image prefixing with STATIC_ROOT
+    return string url
+    """
+    return resize(value, size, 'static_resize')
