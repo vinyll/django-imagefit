@@ -1,5 +1,5 @@
+from __future__ import division
 from imagefit.conf import settings
-
 from PIL import Image as PilImage
 
 import mimetypes
@@ -28,10 +28,23 @@ class Image(object):
 
     @property
     def is_cached(self):
-        return self.cache and self.cache.has_key(self.cached_name)
+        return self.cache and self.cached_name in self.cache
 
     def resize(self, width=None, height=None):
-        return self.pil.thumbnail((width, height), PilImage.ANTIALIAS)
+        return self.pil.thumbnail((int(width), int(height)), PilImage.ANTIALIAS)
+
+    def crop(self, width=None, height=None):
+        img_w, img_h = self.pil.size
+        delta_w = img_w / width
+        delta_h = img_h / height
+        delta = delta_w if delta_w < delta_h else delta_h
+        new_w = img_w / delta
+        new_h = img_h / delta
+        self.resize(new_w, new_h)
+        box_diff = ((new_w - width) / 2, (new_h - height) / 2)
+        box = (int(box_diff[0]), int(box_diff[1]), int(new_w - box_diff[0]), int(new_h - box_diff[1]))
+        self.pil = self.pil.crop(box)
+        return self.pil
 
     def render(self):
         """
@@ -41,7 +54,7 @@ class Image(object):
             return self.cache.get(self.cached_name)
         else:
             image_str = StringIO.StringIO()
-            self.pil.save(image_str, 'png') # not much other supports than png, yet works
+            self.pil.save(image_str, 'png')  # not much other supports than png, yet works
             return image_str.getvalue()
 
     def save(self):
@@ -50,10 +63,9 @@ class Image(object):
         """
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
-            self.pil.save(image_str, 'png') # not much other supports than png, yet works
+            self.pil.save(image_str, 'png')  # not much other supports than png, yet works
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
-
 
 
 class Presets(object):
@@ -89,7 +101,6 @@ class Presets(object):
         Converts a <width>x<height> into a {'width': <width>, 'height': <height>} dict
         return dict or None
         """
-        if re.match('(\d+)x(\d+)', string):
-            sizes = [int(x) for x in re.match('(\d+)x(\d+)', string).groups()]
-            return {'width': sizes[0], 'height': sizes[1]}
-
+        if re.match('(\d+)x(\d+),?(\w*)', string):
+            sizes = [x for x in re.match('(\d+)x(\d+)(,?[c|C]?)', string).groups()]
+            return {'width': int(sizes[0]), 'height': int(sizes[1]), 'crop': bool(sizes[2])}

@@ -27,11 +27,13 @@ Example 2: render model's "news.image" as a thumbnail :
 
     {{ news.image|resize:"thumbnail" }}
 
+Example 1: render "/static/myimage.png" image at a maximum cropped size of 150 x 150 px :
+
+    {{ "/static/myimage.png"|resize:"150x150,C" }}
 
 
 #### What this is not
 
-* For cropping or altering image, use PIL or Pillow
 * For creating specific model fields that resize image when model saves, see django-imagekit
 * If you wish to avoid very large image on the server, consider resizing your original image
 before uploading it
@@ -63,7 +65,6 @@ Prefix it with whatever you want (here "imagefit" for example) :
         url(r'^imagefit/', include('imagefit.urls')),
     )
 
-
 Congratulations, you're all set !
 
 
@@ -72,16 +73,20 @@ Congratulations, you're all set !
 your_template.html
 
     {% load imagefit %}
-    
+
     <img src="{{ "/static/image.png"|resize:'thumbnail' }}" />
     <img src="{{ "/static/image.png"|resize:'320x240' }}" />
+    <img src="{{ "/static/image.png"|resize:'320x240,C' }}" />
 
-This will display your /static/image.png in the thumbnail format (80 x 80 px)
-and below in a custom 320 x 240 pixels.
+This will display your /static/image.png :
 
+1. in the thumbnail format (80 x 80 px)
+2. resized in a custom 320 x 240 pixels
+3. resized and cropped in a custom 320 x 240 pixels
+
+> the _,C_ modifier stands for _Cropping_
 
 ## Configuration
-
 
 #### Root path
 
@@ -111,7 +116,7 @@ You may override them through settings.py
 Custom presets examples :
 
     IMAGEFIT_PRESETS = {
-        'thumbnail': {'width': 64, 'height': 64},
+        'thumbnail': {'width': 64, 'height': 64, 'crop': True},
         'my_preset1': {'width': 300, 'height': 220},
         'my_preset2': {'width': 100},
     }

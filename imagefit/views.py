@@ -20,7 +20,6 @@ def resize(request, path_name, format, url):
         prefix = settings.IMAGEFIT_ROOT
 
     # generate Image instance
-    print settings.IMAGEFIT_ROOT, url
     image = Image(path=os.path.join(prefix, url))
 
     if settings.IMAGEFIT_CACHE_ENABLED:
@@ -42,7 +41,10 @@ def resize(request, path_name, format, url):
             )
 
     # Resize and cache image
-    image.resize(preset.get('width'), preset.get('height'))
+    if preset.get('crop'):
+        image.crop(preset.get('width'), preset.get('height'))
+    else:
+        image.resize(preset.get('width'), preset.get('height'))
     image.save()
 
     return HttpResponse(
