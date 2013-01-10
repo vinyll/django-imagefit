@@ -35,6 +35,9 @@ class Image(object):
 
     def crop(self, width=None, height=None):
         img_w, img_h = self.pil.size
+        # don't crop an image than is smaller than requested size
+        if img_w < width and img_h < height:
+            return self.pil
         delta_w = img_w / width
         delta_h = img_h / height
         delta = delta_w if delta_w < delta_h else delta_h
