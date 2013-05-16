@@ -1,7 +1,9 @@
 from django.template import Library
-from django.conf import settings
+from django.core.urlresolvers import reverse
+
 
 register = Library()
+
 
 @register.filter
 def resize(value, size, root_name='resize'):
@@ -9,7 +11,9 @@ def resize(value, size, root_name='resize'):
     Generates the url for the resized image prefixing with prefix_path
     return string url
     """
-    return "/imagefit/%s/%s%s" % (root_name, size, value)
+    return reverse('imagefit_resize', kwargs=dict(
+        path_name=root_name, format=size, url=value))
+
 
 @register.filter
 def media_resize(value, size):
@@ -18,6 +22,7 @@ def media_resize(value, size):
     return string url
     """
     return resize(value, size, 'media_resize')
+
 
 @register.filter
 def static_resize(value, size):

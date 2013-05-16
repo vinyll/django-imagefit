@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='imagefit',
-    version='0.2',
+    version='0.3',
     description='Render an optimized version of your original image on display. Ability to resize and crop.',
     long_description=open('README.md').read(),
     author='Vincent Agnano',

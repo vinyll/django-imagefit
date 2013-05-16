@@ -18,7 +18,9 @@ def resize(request, path_name, format, url):
         prefix = settings.MEDIA_ROOT
     else:
         prefix = settings.IMAGEFIT_ROOT
-
+    # remove prepending slash
+    if url[0] == '/':
+        url = url[1:]
     # generate Image instance
     image = Image(path=os.path.join(prefix, url))
 
@@ -30,15 +32,15 @@ def resize(request, path_name, format, url):
             return HttpResponse(
                 image.render(),
                 image.mimetype
-                )
+            )
 
     ## retrieve preset from format argument
     preset = Presets.get(format) or Presets.from_string(format)
     if not preset:
         raise ImproperlyConfigured(
-            " \"%s\" is neither a \"WIDTHxHEIGHT\" format nor a key in IMAGEFIT_PRESETS." \
-            % format
-            )
+            " \"%s\" is neither a \"WIDTHxHEIGHT\" format nor a key in " +
+            "IMAGEFIT_PRESETS." % format
+        )
 
     # Resize and cache image
     if preset.get('crop'):
@@ -48,6 +50,6 @@ def resize(request, path_name, format, url):
     image.save()
 
     return HttpResponse(
-            image.render(),
-            image.mimetype
-            )
+        image.render(),
+        image.mimetype
+    )

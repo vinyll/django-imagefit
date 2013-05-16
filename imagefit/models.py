@@ -31,7 +31,9 @@ class Image(object):
         return self.cache and self.cached_name in self.cache
 
     def resize(self, width=None, height=None):
-        return self.pil.thumbnail((int(width), int(height)), PilImage.ANTIALIAS)
+        return self.pil.thumbnail(
+            (int(width), int(height)),
+            PilImage.ANTIALIAS)
 
     def crop(self, width=None, height=None):
         img_w, img_h = self.pil.size
@@ -49,7 +51,9 @@ class Image(object):
         new_h = img_h / delta
         self.resize(new_w, new_h)
         box_diff = ((new_w - width) / 2, (new_h - height) / 2)
-        box = (int(box_diff[0]), int(box_diff[1]), int(new_w - box_diff[0]), int(new_h - box_diff[1]))
+        box = (
+            int(box_diff[0]), int(box_diff[1]), int(new_w - box_diff[0]),
+            int(new_h - box_diff[1]))
         self.pil = self.pil.crop(box)
         return self.pil
 
@@ -61,7 +65,8 @@ class Image(object):
             return self.cache.get(self.cached_name)
         else:
             image_str = StringIO.StringIO()
-            self.pil.save(image_str, 'png')  # not much other supports than png, yet works
+            # not much other supports than png, yet works
+            self.pil.save(image_str, 'png')
             return image_str.getvalue()
 
     def save(self):
@@ -70,7 +75,8 @@ class Image(object):
         """
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
-            self.pil.save(image_str, 'png')  # not much other supports than png, yet works
+            # not much other supports than png, yet works
+            self.pil.save(image_str, 'png')
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 
@@ -105,9 +111,13 @@ class Presets(object):
     @classmethod
     def from_string(cls, string):
         """
-        Converts a <width>x<height> into a {'width': <width>, 'height': <height>} dict
+        Converts a <width>x<height> into a {'width': <width>,
+        'height': <height>} dict
         return dict or None
         """
         if re.match('(\d+)x(\d+),?(\w*)', string):
-            sizes = [x for x in re.match('(\d+)x(\d+)(,?[c|C]?)', string).groups()]
-            return {'width': int(sizes[0]), 'height': int(sizes[1]), 'crop': bool(sizes[2])}
+            sizes = [x for x in re.match(
+                '(\d+)x(\d+)(,?[c|C]?)', string).groups()]
+            return {
+                'width': int(sizes[0]), 'height': int(sizes[1]),
+                'crop': bool(sizes[2])}

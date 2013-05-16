@@ -53,6 +53,9 @@ In settings.py, add "imagefit" in your INSTALLED_APPS
     	'imagefit',
     )
 
+And add the path relative to your project (see _configuration_ below)
+
+    IMAGEFIT_ROOT = "public"
 
 #### urls.py
 
@@ -102,6 +105,18 @@ If starting with a "/", it will be an absolute path (quid about Windows).
 
 So with this example the image url "/static/image.png" would be pointing to
 /PATH/TO/YOUR/PROJECT/**public/static/image.png**
+
+#### Templatetags
+
+    resize(value, size)  # path is relative to you settings.IMAGE_ROOT
+    static_resize(value, size)  # path is relative to you settings.STATIC_ROOT
+    media_resize(value, size)  # path is relative to you settings.MEDIA_ROOT
+
+Can be used in templates as so :
+
+    {{ "/static/logo.png"|resize:'320x240' }}
+    {{ "logo.png"|static_resize:'320x240' }}
+    {{ "user_avatar.png"|media_resize:'320x240' }}
 
 
 #### Presets
