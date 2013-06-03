@@ -5,6 +5,7 @@ from PIL import Image as PilImage
 import mimetypes
 import StringIO
 import re
+import os
 
 
 class Image(object):
@@ -25,6 +26,10 @@ class Image(object):
     @property
     def mimetype(self):
         return mimetypes.guess_type(self.path)[0]
+
+    @property
+    def modified(self):
+        return os.path.getmtime(self.path)
 
     @property
     def is_cached(self):

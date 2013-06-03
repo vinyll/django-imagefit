@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import get_cache
+from django.utils.http import http_date
 
 from imagefit.conf import settings
 from imagefit.models import Image, Presets
@@ -29,10 +30,12 @@ def resize(request, path_name, format, url):
         image.cached_name = request.META.get('PATH_INFO')
         # shortcut everything, render cached version
         if image.is_cached:
-            return HttpResponse(
+            response = HttpResponse(
                 image.render(),
                 image.mimetype
             )
+            response['Last-Modified'] = http_date(image.modified)
+            return response
 
     ## retrieve preset from format argument
     preset = Presets.get(format) or Presets.from_string(format)
@@ -49,7 +52,9 @@ def resize(request, path_name, format, url):
         image.resize(preset.get('width'), preset.get('height'))
     image.save()
 
-    return HttpResponse(
+    response = HttpResponse(
         image.render(),
         image.mimetype
     )
+    response['Last-Modified'] = http_date(image.modified)
+    return response
