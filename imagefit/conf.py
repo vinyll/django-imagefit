@@ -18,7 +18,7 @@ class Settings(LazySettings):
     IMAGEFIT_ROOT = getattr(settings, 'IMAGEFIT_ROOT', '')
 
     # enable cache backend
-    IMAGEFIT_CACHE_ENABLED = getattr(settings, 'IMAGEFIT_CACHE_ENABLED', False)
+    IMAGEFIT_CACHE_ENABLED = getattr(settings, 'IMAGEFIT_CACHE_ENABLED', True)
 
     # cache backend name
     IMAGEFIT_CACHE_BACKEND_NAME = getattr(settings, 'IMAGEFIT_CACHE_NAME', 'imagefit')

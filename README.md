@@ -139,10 +139,14 @@ Custom presets examples :
 
 #### Cache
 
-Because resizing an image on the fly is a big process, django cache is enabled by default.
+Because resizing an image on the fly is a big process, django cache is enabled 
+by default.
 
-You can customize the default cache preferences by overriding default values described below
-via settings.py :
+Therefore you are strongly invited to set your imagefit cache preferences to 
+False for local developement.
+
+You can customize the default cache preferences by overriding default values 
+described below via settings.py :
 
     IMAGEFIT_CACHE_ENABLED = True
     IMAGEFIT_CACHE_BACKEND_NAME = 'imagefit'
