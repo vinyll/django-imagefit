@@ -148,7 +148,9 @@ False for local development.
 You can customize the default cache preferences by overriding default values 
 described below via settings.py :
 
+    # enable/disable server cache
     IMAGEFIT_CACHE_ENABLED = True
+    # set the cache name specific to imagefit with the cache dict
     IMAGEFIT_CACHE_BACKEND_NAME = 'imagefit'
     CACHES = {
         'imagefit': {
@@ -158,19 +160,6 @@ described below via settings.py :
         }
 
 Note that CACHES default values will be merge with yours from settings.py
-
-In production usage, you surely wish to return a browser cached image if it is unchanged. Therefore your should enable __django.middleware.http.ConditionalGetMiddleware__.
-
-##### Summary
-
-developement usage :
-
-- set IMAGEFIT_CACHE_ENABLED to False
-
-Production usage :
-
-- set IMAGEFIT_CACHE_ENABLED to True
-- add django.middleware.http.ConditionalGetMiddleware in your settings middlewares
 
 
 ## troubleshooting

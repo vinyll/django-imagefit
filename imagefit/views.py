@@ -12,6 +12,15 @@ import os
 cache = get_cache(settings.IMAGEFIT_CACHE_BACKEND_NAME)
 
 
+def _image_response(image):
+    response = HttpResponse(
+        image.render(),
+        image.mimetype
+    )
+    response['Last-Modified'] = http_date(image.modified)
+    return response
+
+
 def resize(request, path_name, format, url):
     if path_name == 'static_resize':
         prefix = settings.STATIC_ROOT
@@ -30,14 +39,9 @@ def resize(request, path_name, format, url):
         image.cached_name = request.META.get('PATH_INFO')
         # shortcut everything, render cached version
         if image.is_cached:
-            response = HttpResponse(
-                image.render(),
-                image.mimetype
-            )
-            response['Last-Modified'] = http_date(image.modified)
-            return response
+            return _image_response(image)
 
-    ## retrieve preset from format argument
+    # retrieve preset from format argument
     preset = Presets.get(format) or Presets.from_string(format)
     if not preset:
         raise ImproperlyConfigured(
@@ -52,9 +56,4 @@ def resize(request, path_name, format, url):
         image.resize(preset.get('width'), preset.get('height'))
     image.save()
 
-    response = HttpResponse(
-        image.render(),
-        image.mimetype
-    )
-    response['Last-Modified'] = http_date(image.modified)
-    return response
+    return _image_response(image)

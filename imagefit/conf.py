@@ -30,5 +30,8 @@ class Settings(LazySettings):
             }
         }
 
+    # ConditionalGetMiddleware is required for browser caching
+    if not 'django.middleware.http.ConditionalGetMiddleware' in settings.MIDDLEWARE_CLASSES:
+        settings.MIDDLEWARE_CLASSES += ('django.middleware.http.ConditionalGetMiddleware',)
 
 settings = Settings()
