@@ -8,7 +8,7 @@ import os
 class Settings(LazySettings):
 
     # Dict of preset names that have width and height values
-    IMAGEFIT_PRESETS = getattr(settings, 'IMAGEFIT_SIZES', {
+    IMAGEFIT_PRESETS = getattr(settings, 'IMAGEFIT_PRESETS', {
         'thumbnail': {'width': 80, 'height': 80, 'crop': True},
         'medium': {'width': 320, 'height': 240},
         'original': {},

@@ -143,7 +143,7 @@ Because resizing an image on the fly is a big process, django cache is enabled
 by default.
 
 Therefore you are strongly invited to set your imagefit cache preferences to 
-False for local developement.
+False for local development.
 
 You can customize the default cache preferences by overriding default values 
 described below via settings.py :
@@ -158,6 +158,19 @@ described below via settings.py :
         }
 
 Note that CACHES default values will be merge with yours from settings.py
+
+In production usage, you surely wish to return a browser cached image if it is unchanged. Therefore your should enable __django.middleware.http.ConditionalGetMiddleware__.
+
+##### Summary
+
+developement usage :
+
+- set IMAGEFIT_CACHE_ENABLED to False
+
+Production usage :
+
+- set IMAGEFIT_CACHE_ENABLED to True
+- add django.middleware.http.ConditionalGetMiddleware in your settings middlewares
 
 
 ## troubleshooting
