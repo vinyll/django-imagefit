@@ -5,7 +5,10 @@
 Imagefit allows you to render an image in a template and specify its dimensions.
 It preserves the original image file.
 
-It is compatible with various sources of images such as django-filebrowser's FileBrowseField, user uploaded images, static images, ...
+It is compatible with various sources of images such as django-filebrowser's
+FileBrowseField, user uploaded images, static images, …
+
+Works on Python 3.x and Python 2.6 or more.
 
 
 #### Benefits

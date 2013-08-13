@@ -3,7 +3,10 @@ from imagefit.conf import settings
 from PIL import Image as PilImage
 
 import mimetypes
-import StringIO
+try:
+    import StringIO
+except ImportError:
+    from io import StringIO
 import re
 import os
 
