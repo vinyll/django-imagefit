@@ -79,7 +79,7 @@ class Image(object):
 
 
     def extension(self):
-        return self.cache.split(".")[-1]
+        return self.cached_name.split(".")[-1]
     
     def save(self):
         """
