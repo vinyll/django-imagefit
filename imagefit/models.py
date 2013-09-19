@@ -2,6 +2,7 @@ from __future__ import division
 from imagefit.conf import settings
 from PIL import Image as PilImage
 
+
 import mimetypes
 try:
     import StringIO
@@ -18,14 +19,23 @@ class Image(object):
 
     def __init__(self, path, cache=None, cached_name=None, *args, **kwargs):
         self.path = path
-        self.pil = PilImage.open(path)
+        self.pil_ = None#PilImage.open(path)
         self.cache = cache
         self.cached_name = cached_name
 
-        # force RGB
-        if self.pil.mode not in ('L', 'RGB'):
-            self.pil = self.pil.convert('RGB')
 
+
+    @property
+    def pil(self):
+        if self.pil_ is None:
+            self.pil_ = PilImage.open(self.path)
+            # force RGB
+            if self.pil_.mode not in ('L', 'RGB'):
+                self.pil_ = self.pil_.convert('RGB')
+        
+        return self.pil_
+        
+    
     @property
     def mimetype(self):
         return mimetypes.guess_type(self.path)[0]
@@ -74,9 +84,24 @@ class Image(object):
         else:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, 'png')
+            self.pil.save(image_str, self.extension())
             return image_str.getvalue()
 
+
+    def extension(self):
+        ext = os.path.splitext(self.cached_name)[1].lower()
+        fmt = "JPEG"
+        if not fmt:
+            try:
+                fmt = PilImage.EXTENSION[ext]
+            except KeyError:
+                PilImage.init()
+                try:
+                    fmt = PilImage.EXTENSION[ext]
+                except KeyError:
+                    raise KeyError(ext) # unknown extension
+        return fmt    
+            
     def save(self):
         """
         Save the image to the cache if provided and not cached yet.
@@ -84,7 +109,7 @@ class Image(object):
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, 'png')
+            self.pil.save(image_str, self.extension())
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 

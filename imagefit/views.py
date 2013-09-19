@@ -3,10 +3,14 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import get_cache
 from django.utils.http import http_date
 
+from django.http import Http404, HttpResponse, HttpResponseNotModified
+from django.views.static import was_modified_since
+
 from imagefit.conf import settings
 from imagefit.models import Image, Presets
 
 import os
+import stat
 
 
 cache = get_cache(settings.IMAGEFIT_CACHE_BACKEND_NAME)
@@ -33,6 +37,10 @@ def resize(request, path_name, format, url):
         url = url[1:]
     # generate Image instance
     image = Image(path=os.path.join(prefix, url))
+    statobj = os.stat(image.path)
+    if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
+                              statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
+        return HttpResponseNotModified(mimetype=image.mimetype)
 
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
