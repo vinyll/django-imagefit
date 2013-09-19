@@ -2,6 +2,7 @@ from __future__ import division
 from imagefit.conf import settings
 from PIL import Image as PilImage
 
+
 import mimetypes
 try:
     import StringIO
@@ -79,8 +80,19 @@ class Image(object):
 
 
     def extension(self):
-        return self.cached_name.split(".")[-1]
-    
+        ext = os.path.splitext(self.cached_name)[1].lower()
+        fmt = "JPEG"
+        if not fmt:
+            try:
+                fmt = PilImage.EXTENSION[ext]
+            except KeyError:
+                PilImage.init()
+                try:
+                    fmt = PilImage.EXTENSION[ext]
+                except KeyError:
+                    raise KeyError(ext) # unknown extension
+        return fmt    
+            
     def save(self):
         """
         Save the image to the cache if provided and not cached yet.
