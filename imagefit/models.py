@@ -74,9 +74,13 @@ class Image(object):
         else:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, 'png')
+            self.pil.save(image_str, self.extension())
             return image_str.getvalue()
 
+
+    def extension(self):
+        return self.cache.split(".")[-1]
+    
     def save(self):
         """
         Save the image to the cache if provided and not cached yet.
@@ -84,7 +88,7 @@ class Image(object):
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, 'png')
+            self.pil.save(image_str, self.extension())
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 
