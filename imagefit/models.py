@@ -4,7 +4,7 @@ from PIL import Image as PilImage
 
 import mimetypes
 try:
-    import StringIO
+    from StringIO import StringIO
 except ImportError:
     from io import StringIO
 import re
