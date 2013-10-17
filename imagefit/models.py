@@ -88,7 +88,7 @@ class Image(object):
         else:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, self.extension())
+            self.pil.save(image_str, self.extension)
             return image_str.getvalue()
 
     @property
