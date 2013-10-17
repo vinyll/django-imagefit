@@ -19,7 +19,7 @@ class Image(object):
 
     def __init__(self, path, cache=None, cached_name=None, *args, **kwargs):
         self.path = path
-        self.pil_ = None#PilImage.open(path)
+        self.pil_ = None
         self.cache = cache
         self.cached_name = cached_name
 
@@ -27,6 +27,10 @@ class Image(object):
 
     @property
     def pil(self):
+        """
+        Load the actual image object only on demand - these can get big.
+        """
+        
         if self.pil_ is None:
             self.pil_ = PilImage.open(self.path)
             # force RGB
@@ -87,7 +91,7 @@ class Image(object):
             self.pil.save(image_str, self.extension())
             return image_str.getvalue()
 
-
+    @property
     def extension(self):
         ext = os.path.splitext(self.cached_name)[1].lower()
         fmt = "JPEG"
@@ -109,7 +113,7 @@ class Image(object):
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, self.extension())
+            self.pil.save(image_str, self.extension)
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 
