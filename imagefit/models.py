@@ -39,6 +39,9 @@ class Image(object):
         
         return self.pil_
         
+    @pil.setter
+    def pil(self, value):
+        self.pil_ = value
     
     @property
     def mimetype(self):
