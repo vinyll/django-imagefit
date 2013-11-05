@@ -20,6 +20,29 @@ def _image_response(image):
     response['Last-Modified'] = http_date(image.modified)
     return response
 
+def premultiply(im):
+    pixels = im.load()
+    for y in range(im.size[1]):
+        for x in range(im.size[0]):
+            r, g, b, a = pixels[x, y]
+            if a != 255:
+                r = r * a // 255
+                g = g * a // 255
+                b = b * a // 255
+                pixels[x, y] = (r, g, b, a)
+    return pixels
+
+def unmultiply(im):
+    pixels = im.load()
+    for y in range(im.size[1]):
+        for x in range(im.size[0]):
+            r, g, b, a = pixels[x, y]
+            if a != 255 and a != 0:
+                r = 255 if r >= a else 255 * r // a
+                g = 255 if g >= a else 255 * g // a
+                b = 255 if b >= a else 255 * b // a
+                pixels[x, y] = (r, g, b, a)
+    return pixels
 
 def resize(request, path_name, format, url):
     if path_name == 'static_resize':
@@ -50,10 +73,12 @@ def resize(request, path_name, format, url):
         )
 
     # Resize and cache image
+    image = premultiply(image)
     if preset.get('crop'):
         image.crop(preset.get('width'), preset.get('height'))
     else:
         image.resize(preset.get('width'), preset.get('height'))
+    image = unmultiply(image)
     image.save()
 
     return _image_response(image)
