@@ -23,7 +23,7 @@ class Image(object):
         self.cached_name = cached_name
 
         # force RGB
-        if self.pil.mode not in ('L', 'RGB'):
+        if self.pil.mode not in ('L', 'RGB', 'LA', 'RGBA'):
             self.pil = self.pil.convert('RGB')
 
     @property
