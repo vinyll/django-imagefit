@@ -20,7 +20,6 @@ def _image_response(image):
     response['Last-Modified'] = http_date(image.modified)
     return response
 
-
 def resize(request, path_name, format, url):
     if path_name == 'static_resize':
         prefix = settings.STATIC_ROOT
