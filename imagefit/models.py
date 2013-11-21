@@ -1,5 +1,5 @@
 from __future__ import division
-from imagefit.conf import settings
+from imagefit.conf import ext_to_format, settings
 from PIL import Image as PilImage
 
 import mimetypes
@@ -73,8 +73,7 @@ class Image(object):
             return self.cache.get(self.cached_name)
         else:
             image_str = StringIO.StringIO()
-            # not much other supports than png, yet works
-            self.pil.save(image_str, 'png')
+            self.pil.save(image_str, ext_to_format(self.cached_name))
             return image_str.getvalue()
 
     def save(self):
@@ -83,8 +82,7 @@ class Image(object):
         """
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
-            # not much other supports than png, yet works
-            self.pil.save(image_str, 'png')
+            self.pil.save(image_str, ext_to_format(self.cached_name))
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 
