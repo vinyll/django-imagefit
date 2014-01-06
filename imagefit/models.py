@@ -90,8 +90,8 @@ class Image(object):
             return self.cache.get(self.cached_name)
         else:
             image_str = StringIO.StringIO()
-            # not much other supports than png, yet works
-            self.pil.save(image_str, self.extension)
+            ext = self.extension
+            self.pil.save(image_str, ext, **settings.IMAGEFIT_FORMAT_SETTINGS.get(ext, {}))
             return image_str.getvalue()
 
     @property
@@ -116,7 +116,8 @@ class Image(object):
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
             # not much other supports than png, yet works
-            self.pil.save(image_str, self.extension)
+            ext = self.extension
+            self.pil.save(image_str, ext, **settings.IMAGEFIT_FORMAT_SETTINGS.get(ext, {}))
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 

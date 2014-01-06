@@ -38,5 +38,7 @@ class Settings(LazySettings):
     # ConditionalGetMiddleware is required for browser caching
     if not 'django.middleware.http.ConditionalGetMiddleware' in settings.MIDDLEWARE_CLASSES:
         settings.MIDDLEWARE_CLASSES += ('django.middleware.http.ConditionalGetMiddleware',)
+        
+    IMAGEFIT_FORMAT_SETTINGS = getattr(settings, "IMAGEFIT_FORMAT_SETTINGS", {"JPEG": {"quality":85}})
 
 settings = Settings()
