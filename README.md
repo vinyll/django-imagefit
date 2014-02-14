@@ -199,6 +199,23 @@ CACHES = {
 Note that `CACHES` default values will be merge with yours from _settings.py_
 
 
+#### Formats
+
+Imagefit uses PIL to resize and crop the images and this library requires to
+specify the format of the output file. Imagefit allows you to specify an output
+format depending of the output filename. Please note that the the output extension
+is left unchanged.
+
+You can customize the default mapping by overriding default values described below
+via settings.py :
+
+```python
+# Example extension -> format.
+IMAGEFIT_EXT_TO_FORMAT = {'.jpg': 'jpeg', '.bmp': 'png'}
+# Disallow the fall-back to a default format: Raise an exception in such case.
+IMAGEFIT_EXT_TO_FORMAT_DEFAULT = None
+```
+
 ## Troubleshooting
 
 
