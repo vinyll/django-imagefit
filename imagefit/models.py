@@ -97,16 +97,17 @@ class Image(object):
     @property
     def extension(self):
         ext = os.path.splitext(self.cached_name)[1].lower()
-        fmt = "JPEG"
-        if not fmt:
+        
+        try:
+            fmt = PilImage.EXTENSION[ext]
+        except KeyError:
+            PilImage.init()
             try:
                 fmt = PilImage.EXTENSION[ext]
             except KeyError:
-                PilImage.init()
-                try:
-                    fmt = PilImage.EXTENSION[ext]
-                except KeyError:
-                    raise KeyError(ext) # unknown extension
+                raise KeyError(ext) # unknown extension
+        if not fmt:
+            fmt = "JPEG"
         return fmt    
             
     def save(self):
