@@ -34,8 +34,8 @@ class Image(object):
         if self.pil_ is None:
             self.pil_ = PilImage.open(self.path)
             # force RGB
-            if self.pil_.mode not in ('L', 'RGB'):
-                self.pil_ = self.pil_.convert('RGB')
+            if self.pil_.mode not in ('L', 'RGBA'):
+                self.pil_ = self.pil_.convert('RGBA')
         
         return self.pil_
         
