@@ -23,15 +23,22 @@ class Settings(LazySettings):
     # cache backend name
     IMAGEFIT_CACHE_BACKEND_NAME = getattr(settings, 'IMAGEFIT_CACHE_NAME', 'imagefit')
 
-    settings.CACHES = {
+    if hasattr(settings, "CACHES"):
+        caches = settings.CACHES
+    else:
+        caches = {}
+        settings.CACHES = caches
+    caches.update({
         IMAGEFIT_CACHE_BACKEND_NAME: {
             'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
             'LOCATION': os.path.join(tempfile.gettempdir(), 'django_imagefit')
             }
-        }
+        })
 
     # ConditionalGetMiddleware is required for browser caching
     if not 'django.middleware.http.ConditionalGetMiddleware' in settings.MIDDLEWARE_CLASSES:
         settings.MIDDLEWARE_CLASSES += ('django.middleware.http.ConditionalGetMiddleware',)
+        
+    IMAGEFIT_FORMAT_SETTINGS = getattr(settings, "IMAGEFIT_FORMAT_SETTINGS", {"JPEG": {"quality":85}})
 
 settings = Settings()
