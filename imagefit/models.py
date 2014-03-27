@@ -105,9 +105,12 @@ class Image(object):
             try:
                 fmt = PilImage.EXTENSION[ext]
             except KeyError:
-                raise KeyError(ext) # unknown extension
+                fmt = "JPEG"
+                #raise KeyError(ext) # unknown extension
         if not fmt:
             fmt = "JPEG"
+            
+        print(fmt)
         return fmt    
             
     def save(self):
