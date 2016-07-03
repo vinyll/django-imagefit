@@ -32,7 +32,7 @@ def resize(request, path_name, format, url):
     if url[0] == '/':
         url = url[1:]
     # generate Image instance
-    image = Image(path=os.path.join(prefix, url))
+    image = Image(path=os.path.normpath(os.path.join(prefix, url)))
 
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
