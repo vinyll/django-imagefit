@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotModified
 from django.core.exceptions import ImproperlyConfigured
-from django.core.cache import get_cache
+from django.core.cache import caches
 from django.utils.http import http_date
 from django.views.static import was_modified_since
 
@@ -11,7 +11,7 @@ import os
 import stat
 
 
-cache = get_cache(settings.IMAGEFIT_CACHE_BACKEND_NAME)
+cache = caches[settings.IMAGEFIT_CACHE_BACKEND_NAME]
 
 
 def _image_response(image):
