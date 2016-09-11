@@ -29,10 +29,11 @@ class ImagefitConf(AppConf):
     IMAGEFIT_CACHE_ENABLED = True
     IMAGEFIT_CACHE_BACKEND_NAME = 'imagefit'
 
-    settings.CACHES[IMAGEFIT_CACHE_BACKEND_NAME] = {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(tempfile.gettempdir(), 'django_imagefit')
-    }
+    # On Django1.8, this overwrites all CACHES?
+    #settings.CACHES[IMAGEFIT_CACHE_BACKEND_NAME] = {
+    #    'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+    #    'LOCATION': os.path.join(tempfile.gettempdir(), 'django_imagefit')
+    #}
 
     #: ConditionalGetMiddleware is required for browser caching
     if not 'django.middleware.http.ConditionalGetMiddleware' in settings.MIDDLEWARE_CLASSES:
