@@ -1,12 +1,14 @@
 from __future__ import division
-from imagefit.conf import ext_to_format, settings
+from imagefit.conf import settings
 from PIL import Image as PilImage
 
 import mimetypes
+
 try:
-    import StringIO
+    from StringIO import StringIO
 except ImportError:
-    import io as StringIO
+    from io import StringIO, BytesIO
+    
 import re
 import os
 
@@ -23,7 +25,7 @@ class Image(object):
         self.cached_name = cached_name
 
         # force RGB
-        if self.pil.mode not in ('L', 'RGB', 'LA', 'RGBA'):
+        if self.pil.mode not in ('L', 'RGB'):
             self.pil = self.pil.convert('RGB')
 
     @property
@@ -72,8 +74,9 @@ class Image(object):
         if self.is_cached:
             return self.cache.get(self.cached_name)
         else:
-            image_str = StringIO.StringIO()
-            self.pil.save(image_str, ext_to_format(self.cached_name))
+            image_str = BytesIO()
+            # not much other supports than png, yet works
+            self.pil.save(image_str, 'png')
             return image_str.getvalue()
 
     def save(self):
@@ -82,7 +85,8 @@ class Image(object):
         """
         if self.cache and not self.is_cached:
             image_str = StringIO.StringIO()
-            self.pil.save(image_str, ext_to_format(self.cached_name))
+            # not much other supports than png, yet works
+            self.pil.save(image_str, 'png')
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
 

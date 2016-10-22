@@ -1,47 +1,41 @@
 from django.conf import settings
-from appconf import AppConf
+from django.conf import LazySettings
 
 import tempfile
 import os
 
 
-class ImagefitConf(AppConf):
+class Settings(LazySettings):
 
-    #: dictionary of preset names that have width and height values
-    IMAGEFIT_PRESETS = {
+    # Dict of preset names that have width and height values
+    IMAGEFIT_PRESETS = getattr(settings, 'IMAGEFIT_PRESETS', {
         'thumbnail': {'width': 80, 'height': 80, 'crop': True},
         'medium': {'width': 320, 'height': 240},
         'original': {},
-    }
+        })
 
-    #: dictionary of output formats depending on the output image extension.
-    IMAGEFIT_EXT_TO_FORMAT = {
-        '.jpg': 'jpeg', '.jpeg': 'jpeg'
-    }
+    # Root path from where to read urls
+    IMAGEFIT_ROOT = getattr(settings, 'IMAGEFIT_ROOT', '')
 
-    #: default format for any missing extension in IMAGEFIT_EXT_TO_FORMAT
-    #: do not fall-back to a default format but raise an exception if set to None
-    IMAGEFIT_EXT_TO_FORMAT_DEFAULT = 'png'
+    # enable cache backend
+    IMAGEFIT_CACHE_ENABLED = getattr(settings, 'IMAGEFIT_CACHE_ENABLED', True)
 
-    #: root path from where to read urls
-    IMAGEFIT_ROOT = ''
+    # cache backend name
+    IMAGEFIT_CACHE_BACKEND_NAME = getattr(settings, 'IMAGEFIT_CACHE_NAME', 'imagefit')
 
-    IMAGEFIT_CACHE_ENABLED = True
-    IMAGEFIT_CACHE_BACKEND_NAME = 'imagefit'
+    settings.CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'default_cache_table',
+            },
+        IMAGEFIT_CACHE_BACKEND_NAME: {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': os.path.join(tempfile.gettempdir(), 'django_imagefit')
+            }
+        }
 
-    settings.CACHES[IMAGEFIT_CACHE_BACKEND_NAME] = {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(tempfile.gettempdir(), 'django_imagefit')
-    }
-
-    #: ConditionalGetMiddleware is required for browser caching
+    # ConditionalGetMiddleware is required for browser caching
     if not 'django.middleware.http.ConditionalGetMiddleware' in settings.MIDDLEWARE_CLASSES:
         settings.MIDDLEWARE_CLASSES += ('django.middleware.http.ConditionalGetMiddleware',)
 
-
-def ext_to_format(filename):
-    extension = os.path.splitext(filename)[1].lower()
-    format = settings.IMAGEFIT_EXT_TO_FORMAT.get(extension, settings.IMAGEFIT_EXT_TO_FORMAT_DEFAULT)
-    if not format:
-        raise KeyError('Unknown image extension: {0}'.format(extension))
-    return format
+settings = Settings()

@@ -1,17 +1,15 @@
-from django.http import HttpResponse, HttpResponseNotModified
+from django.http import HttpResponse
 from django.core.exceptions import ImproperlyConfigured
-from django.core.cache import get_cache
+from django.core.cache import cache
 from django.utils.http import http_date
-from django.views.static import was_modified_since
 
 from imagefit.conf import settings
 from imagefit.models import Image, Presets
 
 import os
-import stat
 
 
-cache = get_cache(settings.IMAGEFIT_CACHE_BACKEND_NAME)
+cache = cache.get(settings.IMAGEFIT_CACHE_BACKEND_NAME)
 
 
 def _image_response(image):
@@ -33,15 +31,12 @@ def resize(request, path_name, format, url):
     # remove prepending slash
     if url[0] == '/':
         url = url[1:]
+    
+    # remove first bread
+    url = url[url.find('/'):]
+    
     # generate Image instance
-    image = Image(path=os.path.join(prefix, url))
-    if not os.path.exists(image.path):
-        return HttpResponse(status=404)
-
-    statobj = os.stat(image.path)
-    if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
-                              statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
-        return HttpResponseNotModified(mimetype=image.mimetype)
+    image = Image(path=prefix+url)
 
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
@@ -57,11 +52,12 @@ def resize(request, path_name, format, url):
             " \"%s\" is neither a \"WIDTHxHEIGHT\" format nor a key in " +
             "IMAGEFIT_PRESETS." % format
         )
-
+    
     # Resize and cache image
     if preset.get('crop'):
         image.crop(preset.get('width'), preset.get('height'))
     else:
+        print ("PRINTING", preset.get('width'), preset.get('height'))
         image.resize(preset.get('width'), preset.get('height'))
     image.save()
 
