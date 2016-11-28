@@ -41,7 +41,7 @@ def resize(request, path_name, format, url):
     statobj = os.stat(image.path)
     if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
                               statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
-        return HttpResponseNotModified(mimetype=image.mimetype)
+        return HttpResponseNotModified(content_type=image.mimetype)
 
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache

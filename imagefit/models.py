@@ -4,9 +4,9 @@ from PIL import Image as PilImage
 
 import mimetypes
 try:
-    import StringIO
+    import BytesIO
 except ImportError:
-    import io as StringIO
+    from io import BytesIO
 import re
 import os
 
@@ -72,7 +72,7 @@ class Image(object):
         if self.is_cached:
             return self.cache.get(self.cached_name)
         else:
-            image_str = StringIO.StringIO()
+            image_str = BytesIO()
             self.pil.save(image_str, ext_to_format(self.cached_name))
             return image_str.getvalue()
 
@@ -81,7 +81,7 @@ class Image(object):
         Save the image to the cache if provided and not cached yet.
         """
         if self.cache and not self.is_cached:
-            image_str = StringIO.StringIO()
+            image_str = BytesIO()
             self.pil.save(image_str, ext_to_format(self.cached_name))
             self.cache.set(self.cached_name, image_str.getvalue())
             image_str.close()
