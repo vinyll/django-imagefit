@@ -9,6 +9,7 @@ from imagefit.models import Image, Presets
 
 import os
 import stat
+import time
 
 
 cache = caches[settings.IMAGEFIT_CACHE_BACKEND_NAME]
@@ -20,6 +21,8 @@ def _image_response(image):
         image.mimetype
     )
     response['Last-Modified'] = http_date(image.modified)
+    expire_time = getattr(settings, 'IMAGEFIT_EXPIRE_HEADER', 3600*24*30)
+    response['Expires'] = http_date(time.time() + expire_time)
     return response
 
 
