@@ -216,6 +216,20 @@ IMAGEFIT_EXT_TO_FORMAT = {'.jpg': 'jpeg', '.bmp': 'png'}
 IMAGEFIT_EXT_TO_FORMAT_DEFAULT = None
 ```
 
+
+#### Expires Header
+
+Django Imagefit comes with Expires header to tell the browser whether it should request the resource from the server or use the cached version.  
+This has two core benefits. The browser will be using the cached version of the resource in the second load and page load will be much faster. Also, it will require fewer requests to the server. 
+
+As a page score parameter, static resources used in a web page should be containing an Expires information for better performance.
+
+The default value of the expires header is set to 30 days from now. You can override this value via settings.py as:
+
+```python
+IMAGEFIT_EXPIRE_HEADER = 3600  # for 1 hour
+```
+
 ## Troubleshooting
 
 
