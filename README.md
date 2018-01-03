@@ -8,7 +8,7 @@ It preserves the original image file.
 It is compatible with various sources of images such as django-filebrowser's
 FileBrowseField, user uploaded images, static images, …
 
-Works on Python 3.x and Python 2.6 or more; Django 1.4 > 1.10 (and later?).
+Works on Python 3.x and Python 2.6 or more; Django 1.4 > 2.0.
 
 
 #### Benefits
@@ -73,8 +73,8 @@ In _settings.py_, add _imagefit_ in your INSTALLED_APPS
 
 ```python
 INSTALLED_APPS = (
-	…,
-	'imagefit',
+    …,
+    'imagefit',
 )
 ```
 
