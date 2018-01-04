@@ -1,14 +1,8 @@
 from django.conf import settings
-from django import VERSION as DJANGO_VERSION
 from appconf import AppConf
 
 import tempfile
 import os
-
-# Django's middleware management (and some other things) has changed
-# since version 1.9. 
-# DJANGO_VERSION is a tuple like "(2, 0, 0, 'final', 0)".
-_USE_OLD_DJANGO_BEHAVIOR = DJANGO_VERSION[0] > 1 or (DJANGO_VERSION[0] == 1 and DJANGO_VERSION[1] > 9)
 
 
 class ImagefitConf(AppConf):
@@ -41,12 +35,11 @@ class ImagefitConf(AppConf):
     }
 
     #: ConditionalGetMiddleware is required for browser caching
-    if _USE_OLD_DJANGO_BEHAVIOR:
-        _middlewares_list = getattr(settings, 'MIDDLEWARE')
-    else:
-        _middlewares_list = getattr(settings, 'MIDDLEWARE_CLASSES')
-    if not 'django.middleware.http.ConditionalGetMiddleware' in _middlewares_list:
-        _middlewares_list += ('django.middleware.http.ConditionalGetMiddleware',)
+    # Django's middleware management (and some other things) has changed
+    # since version 1.9.
+    property_name = (hasattr(settings, 'MIDDLEWARE') and 'MIDDLEWARE') or 'MIDDLEWARE_CLASSES'
+    if not 'django.middleware.http.ConditionalGetMiddleware' in property_name:
+        property_name += ('django.middleware.http.ConditionalGetMiddleware',)
 
 
 def ext_to_format(filename):
