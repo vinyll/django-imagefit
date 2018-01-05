@@ -38,8 +38,9 @@ class ImagefitConf(AppConf):
     # Django's middleware management (and some other things) has changed
     # since version 1.9.
     property_name = (hasattr(settings, 'MIDDLEWARE') and 'MIDDLEWARE') or 'MIDDLEWARE_CLASSES'
+    middleswares = getattr(settings, property_name)
     if not 'django.middleware.http.ConditionalGetMiddleware' in property_name:
-        property_name += ('django.middleware.http.ConditionalGetMiddleware',)
+        setattr(settings, property_name, middlewares + ('django.middleware.http.ConditionalGetMiddleware',))
 
 
 def ext_to_format(filename):
