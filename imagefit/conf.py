@@ -39,7 +39,7 @@ class ImagefitConf(AppConf):
     # since version 1.9.
     property_name = (hasattr(settings, 'MIDDLEWARE') and 'MIDDLEWARE') or 'MIDDLEWARE_CLASSES'
     middleswares = getattr(settings, property_name)
-    if not 'django.middleware.http.ConditionalGetMiddleware' in property_name:
+    if 'django.middleware.http.ConditionalGetMiddleware' not in property_name:
         setattr(settings, property_name, middlewares + ('django.middleware.http.ConditionalGetMiddleware',))
 
 
