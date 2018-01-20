@@ -1,5 +1,8 @@
 from django.template import Library
-from django.core.urlresolvers import reverse
+try:  # Django >=1.9
+    from django.core.urlresolvers import reverse
+except ImportError:
+    from django.urls import reverse
 
 
 register = Library()

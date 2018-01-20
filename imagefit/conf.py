@@ -35,8 +35,12 @@ class ImagefitConf(AppConf):
     }
 
     #: ConditionalGetMiddleware is required for browser caching
-    if not 'django.middleware.http.ConditionalGetMiddleware' in settings.MIDDLEWARE_CLASSES:
-        settings.MIDDLEWARE_CLASSES += ('django.middleware.http.ConditionalGetMiddleware',)
+    # Django's middleware management (and some other things) has changed
+    # since version 1.9.
+    property_name = (hasattr(settings, 'MIDDLEWARE') and 'MIDDLEWARE') or 'MIDDLEWARE_CLASSES'
+    middleswares = getattr(settings, property_name)
+    if 'django.middleware.http.ConditionalGetMiddleware' not in middleswares:
+        setattr(settings, property_name, middlewares + ('django.middleware.http.ConditionalGetMiddleware',))
 
 
 def ext_to_format(filename):
