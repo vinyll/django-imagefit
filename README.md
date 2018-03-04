@@ -55,7 +55,7 @@ before uploading it
 
 #### Download
 
-Via pip ![latest version](https://pypip.in/v/django-imagefit/badge.png)
+Via pip ![latest version](https://img.shields.io/pypi/v/django-imagefit.svg)
 
 ```bash
 pip install django-imagefit
