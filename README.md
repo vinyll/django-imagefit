@@ -220,7 +220,7 @@ IMAGEFIT_EXT_TO_FORMAT_DEFAULT = None
 #### Expires Header
 
 Django Imagefit comes with Expires header to tell the browser whether it should request the resource from the server or use the cached version.  
-This has two core benefits. The browser will be using the cached version of the resource in the second load and page load will be much faster. Also, it will require fewer requests to the server. 
+This has two core benefits. The browser will be using the cached version of the resource in the second load and page load will be much faster. Also, it will require fewer requests to the server.
 
 As a page score parameter, static resources used in a web page should be containing an Expires information for better performance.
 
@@ -252,3 +252,8 @@ If so :
 * Make resize quality/speed configurable
 * More examples for doc
 * enable URL images in addition to system files
+
+
+## Imagefit Developers
+
+_Aka note to self_: Deploy to pypi using `make deploy`.
