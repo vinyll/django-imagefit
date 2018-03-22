@@ -40,7 +40,7 @@ class ImagefitConf(AppConf):
     property_name = (hasattr(settings, 'MIDDLEWARE') and 'MIDDLEWARE') or 'MIDDLEWARE_CLASSES'
     middlewares = getattr(settings, property_name)
     if 'django.middleware.http.ConditionalGetMiddleware' not in middlewares:
-        setattr(settings, property_name, middlewares + ('django.middleware.http.ConditionalGetMiddleware',))
+        setattr(settings, property_name, tuple(middlewares) + ('django.middleware.http.ConditionalGetMiddleware',))
 
 
 def ext_to_format(filename):
