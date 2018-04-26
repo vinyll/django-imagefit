@@ -1,3 +1,5 @@
+<p align="center"><img src="icons/logo.svg" alt="django-imagefit" height="200px"></p>
+
 # Django Image Fit - Resize an image on the fly
 
 [![Build Status](https://api.travis-ci.org/vinyll/django-imagefit.png)](http://travis-ci.org/vinyll/django-imagefit)
