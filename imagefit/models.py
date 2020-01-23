@@ -3,6 +3,10 @@ from imagefit.conf import ext_to_format, settings
 from PIL import Image as PilImage
 
 import mimetypes
+import time
+import requests
+from io import BytesIO
+
 try:
     import BytesIO
 except ImportError:
@@ -16,9 +20,14 @@ class Image(object):
     Represents an Image file on the system.
     """
 
-    def __init__(self, path, cache=None, cached_name=None, *args, **kwargs):
+    def __init__(self, path, external=False, cache=None, cached_name=None, *args, **kwargs):
         self.path = path
-        self.pil = PilImage.open(path)
+        self.is_external = external
+        if self.is_external:
+            response = requests.get(path)
+                self.pil = PilImage.open(BytesIO(response.content))
+            else:
+                self.pil = PilImage.open(path)
         self.cache = cache
         self.cached_name = cached_name
 
@@ -32,6 +41,8 @@ class Image(object):
 
     @property
     def modified(self):
+        if self.is_external:
+            return int(round(time.time()))
         return os.path.getmtime(self.path)
 
     @property
