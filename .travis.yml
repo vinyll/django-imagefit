@@ -10,6 +10,8 @@ env:
   - DJANGO_VERSION=2.0
 install:
   - pip install Django==$DJANGO_VERSION
+  - pip install requests
+  - pip install Pillow
 script: python setup.py test
 
 # Django 2.0+ supports only Python 3.x.
