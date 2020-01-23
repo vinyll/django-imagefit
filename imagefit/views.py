@@ -49,12 +49,14 @@ def resize(request, path_name, format, url):
                                   statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
             return HttpResponseNotModified(content_type=image.mimetype)
 
+    image.cached_name = request.META.get('PATH_INFO')
+
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
-        image.cached_name = request.META.get('PATH_INFO')
         # shortcut everything, render cached version
         if image.is_cached:
             return _image_response(image)
+
 
     # retrieve preset from format argument
     preset = Presets.get(format) or Presets.from_string(format)
