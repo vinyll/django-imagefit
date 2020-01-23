@@ -25,9 +25,9 @@ class Image(object):
         self.is_external = external
         if self.is_external:
             response = requests.get(path)
-                self.pil = PilImage.open(BytesIO(response.content))
-            else:
-                self.pil = PilImage.open(path)
+            self.pil = PilImage.open(BytesIO(response.content))
+        else:
+            self.pil = PilImage.open(path)
         self.cache = cache
         self.cached_name = cached_name
 
