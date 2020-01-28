@@ -5,7 +5,6 @@ from PIL import Image as PilImage
 import mimetypes
 import time
 import requests
-from io import BytesIO
 
 try:
     import BytesIO

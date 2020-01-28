@@ -153,7 +153,7 @@ _/PATH/TO/YOUR/PROJECT/**public/static/image.png**_
     resize(value, size)  # path is relative to you settings.IMAGE_ROOT
     static_resize(value, size)  # path is relative to you settings.STATIC_ROOT
     media_resize(value, size)  # path is relative to you settings.MEDIA_ROOT
-    external_resize(value, size) # path is a http/https url
+    external_resize(value, size) # path is an http/https url
 
 Can be used in templates as so :
 
