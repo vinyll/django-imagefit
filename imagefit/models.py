@@ -19,9 +19,9 @@ class Image(object):
     Represents an Image file on the system.
     """
 
-    def __init__(self, path, external=False, cache=None, cached_name=None, *args, **kwargs):
+    def __init__(self, path, cache=None, cached_name=None, *args, **kwargs):
         self.path = path
-        self.is_external = external
+        self.is_external = path.startswith(('http://', 'https://'))
         if self.is_external:
             response = requests.get(path)
             self.pil = PilImage.open(BytesIO(response.content))

@@ -38,7 +38,7 @@ def resize(request, path_name, format, url):
         url = url[1:]
     # generate Image instance
     if path_name == "external_resize":
-        image = Image(path=url, external=True)
+        image = Image(path=url)
     else:
         image = Image(path=os.path.join(prefix, url))
         if not os.path.exists(image.path):
