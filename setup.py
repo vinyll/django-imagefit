@@ -14,7 +14,7 @@ setup(
     license='BSD',
     packages=find_packages(),
     zip_safe=False,
-    install_requires=['django-appconf'],
+    install_requires=['django-appconf', 'Pillow', 'requests'],
     include_package_data=True,
     classifiers=[
         'Environment :: Web Environment',

@@ -34,3 +34,11 @@ def static_resize(value, size):
     return string url
     """
     return resize(value, size, 'static_resize')
+
+@register.filter
+def external_resize(value, size):
+    """
+    Generates the url for the resized image for external image
+    return string url
+    """
+    return resize(value, size, 'external_resize')

@@ -39,10 +39,16 @@ Example 2: render model's _news.image_ as a thumbnail:
 {{ news.image|resize:"thumbnail" }}
 ```
 
-Example 1: render _/static/myimage.png_ image at a maximum cropped size of 150 x 150 px:
+Example 3: render _/static/myimage.png_ image at a maximum cropped size of 150 x 150 px:
 
 ```html
 {{ "/static/myimage.png"|resize:"150x150,C" }}
+```
+
+Example 4: render _https://example.com/test.png_ image at a maximum cropped size of 150 x 150 px:
+
+```html
+{{ "https://example.com/test.png"|external_resize:"150x150,C" }}
 ```
 
 #### What this is not
@@ -112,6 +118,7 @@ your_template.html
 <img src="{{ "/static/image.png"|resize:'thumbnail' }}" />
 <img src="{{ "/static/image.png"|resize:'320x240' }}" />
 <img src="{{ "/static/image.png"|resize:'320x240,C' }}" />
+<img src="{{ "https://example.com/test.png"|external_resize:'320x240' }}" />
 ```
 
 This will display your _/static/image.png_:
@@ -146,12 +153,14 @@ _/PATH/TO/YOUR/PROJECT/**public/static/image.png**_
     resize(value, size)  # path is relative to you settings.IMAGE_ROOT
     static_resize(value, size)  # path is relative to you settings.STATIC_ROOT
     media_resize(value, size)  # path is relative to you settings.MEDIA_ROOT
+    external_resize(value, size) # path is an http/https url
 
 Can be used in templates as so :
 
     {{ "/static/logo.png"|resize:'320x240' }}
     {{ "logo.png"|static_resize:'320x240' }}
     {{ "user_avatar.png"|media_resize:'320x240' }}
+    {{ "https://example.com/test.png"|external_resize:'320x240' }}
 
 
 #### Presets

@@ -37,21 +37,26 @@ def resize(request, path_name, format, url):
     if url[0] == '/':
         url = url[1:]
     # generate Image instance
-    image = Image(path=os.path.join(prefix, url))
-    if not os.path.exists(image.path):
-        return HttpResponse(status=404)
+    if path_name == "external_resize":
+        image = Image(path=url)
+    else:
+        image = Image(path=os.path.join(prefix, url))
+        if not os.path.exists(image.path):
+            return HttpResponse(status=404)
 
-    statobj = os.stat(image.path)
-    if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
-                              statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
-        return HttpResponseNotModified(content_type=image.mimetype)
+        statobj = os.stat(image.path)
+        if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
+                                  statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
+            return HttpResponseNotModified(content_type=image.mimetype)
+
+    image.cached_name = request.META.get('PATH_INFO')
 
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
-        image.cached_name = request.META.get('PATH_INFO')
         # shortcut everything, render cached version
         if image.is_cached:
             return _image_response(image)
+
 
     # retrieve preset from format argument
     preset = Presets.get(format) or Presets.from_string(format)
