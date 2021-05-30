@@ -1,16 +1,15 @@
-from django.http import HttpResponse, HttpResponseNotModified
-from django.core.exceptions import ImproperlyConfigured
+import os
+import stat
+import time
+
 from django.core.cache import caches
+from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponse, HttpResponseNotModified
 from django.utils.http import http_date
 from django.views.static import was_modified_since
 
 from imagefit.conf import settings
 from imagefit.models import Image, Presets
-
-import os
-import stat
-import time
-
 
 cache = caches[settings.IMAGEFIT_CACHE_BACKEND_NAME]
 
@@ -37,9 +36,10 @@ def resize(request, path_name, format, url):
     if url[0] == '/':
         url = url[1:]
     # generate Image instance
-    image = Image(path=os.path.join(prefix, url))
-    if not os.path.exists(image.path):
+    path = os.path.join(prefix, url)
+    if not os.path.exists(path):
         return HttpResponse(status=404)
+    image = Image(path=path)
 
     statobj = os.stat(image.path)
     if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
