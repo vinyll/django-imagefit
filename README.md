@@ -10,7 +10,7 @@ It preserves the original image file.
 It is compatible with various sources of images such as django-filebrowser's
 FileBrowseField, user uploaded images, static images, …
 
-Works on Python 3.x and Python 2.6 or more; Django 1.4 > 2.0.
+Works on Python 3.x and Python 2.6 or more; Django 1.4 > 2.0. Compatible with Django 4.0
 
 
 #### Benefits
