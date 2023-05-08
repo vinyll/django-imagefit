@@ -57,8 +57,8 @@ def resize(request, path_name, format, url):
     preset = Presets.get(format) or Presets.from_string(format)
     if not preset:
         raise ImproperlyConfigured(
-            " \"%s\" is neither a \"WIDTHxHEIGHT\" format nor a key in " +
-            "IMAGEFIT_PRESETS." % format
+            f" \"{format}\" is neither a \"WIDTHxHEIGHT\" format nor a key in " +
+            "IMAGEFIT_PRESETS."
         )
 
     # Resize and cache image
