@@ -1,15 +1,15 @@
-import os
-import stat
-import time
-
-from django.core.cache import caches
-from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponse, HttpResponseNotModified
+from django.core.exceptions import ImproperlyConfigured
+from django.core.cache import caches
 from django.utils.http import http_date
 from django.views.static import was_modified_since
 
 from imagefit.conf import settings
 from imagefit.models import Image, Presets
+
+import os
+import stat
+import time
 
 cache = caches[settings.IMAGEFIT_CACHE_BACKEND_NAME]
 
@@ -20,7 +20,7 @@ def _image_response(image):
         image.mimetype
     )
     response['Last-Modified'] = http_date(image.modified)
-    expire_time = getattr(settings, 'IMAGEFIT_EXPIRE_HEADER', 3600*24*30)
+    expire_time = getattr(settings, 'IMAGEFIT_EXPIRE_HEADER', 3600 * 24 * 30)
     response['Expires'] = http_date(time.time() + expire_time)
     return response
 
@@ -46,9 +46,10 @@ def resize(request, path_name, format, url):
                               statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
         return HttpResponseNotModified(content_type=image.mimetype)
 
+    image.cached_name = request.META.get('PATH_INFO')
+
     if settings.IMAGEFIT_CACHE_ENABLED:
         image.cache = cache
-        image.cached_name = request.META.get('PATH_INFO')
         # shortcut everything, render cached version
         if image.is_cached:
             return _image_response(image)
