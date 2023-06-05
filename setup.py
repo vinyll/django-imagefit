@@ -9,7 +9,7 @@ setup(
     description='Render an optimized version of your original image on display. Ability to resize and crop.',
     long_description=open('README.md').read(),
     author='Vincent Agnano',
-    author_email='vincent.agnano@scopyleft.fr',
+    author_email='vinyll@protonmail.com',
     url='http://github.com/vinyll/django-imagefit',
     license='BSD',
     packages=find_packages(),
