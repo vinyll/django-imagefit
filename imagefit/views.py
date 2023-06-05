@@ -36,17 +36,15 @@ def resize(request, path_name, format, url):
     if url[0] == '/':
         url = url[1:]
     # generate Image instance
-    if path_name == "external_resize":
-        image = Image(path=url)
-    else:
-        image = Image(path=os.path.join(prefix, url))
-        if not os.path.exists(image.path):
-            return HttpResponse(status=404)
+    path = os.path.join(prefix, url)
+    if not os.path.exists(path):
+        return HttpResponse(status=404)
+    image = Image(path=path)
 
-        statobj = os.stat(image.path)
-        if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
-                                  statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
-            return HttpResponseNotModified(content_type=image.mimetype)
+    statobj = os.stat(image.path)
+    if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
+                              statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
+        return HttpResponseNotModified(content_type=image.mimetype)
 
     image.cached_name = request.META.get('PATH_INFO')
 
