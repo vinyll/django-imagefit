@@ -11,7 +11,6 @@ import os
 import stat
 import time
 
-
 cache = caches[settings.IMAGEFIT_CACHE_BACKEND_NAME]
 
 
@@ -21,7 +20,7 @@ def _image_response(image):
         image.mimetype
     )
     response['Last-Modified'] = http_date(image.modified)
-    expire_time = getattr(settings, 'IMAGEFIT_EXPIRE_HEADER', 3600*24*30)
+    expire_time = getattr(settings, 'IMAGEFIT_EXPIRE_HEADER', 3600 * 24 * 30)
     response['Expires'] = http_date(time.time() + expire_time)
     return response
 
@@ -56,7 +55,6 @@ def resize(request, path_name, format, url):
         # shortcut everything, render cached version
         if image.is_cached:
             return _image_response(image)
-
 
     # retrieve preset from format argument
     preset = Presets.get(format) or Presets.from_string(format)
