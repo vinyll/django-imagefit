@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name='django-imagefit',
     version='0.7.0',
+    long_description_content_type='text/markdown',
     description='Render an optimized version of your original image on display. Ability to resize and crop.',
     long_description=open('README.md').read(),
     author='Vincent Agnano',
