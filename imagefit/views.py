@@ -3,6 +3,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import caches
 from django.utils.http import http_date
 from django.views.static import was_modified_since
+from inspect import Signature
+
 
 from imagefit.conf import settings
 from imagefit.models import Image, Presets
@@ -10,6 +12,7 @@ from imagefit.models import Image, Presets
 import os
 import stat
 import time
+
 
 cache = caches[settings.IMAGEFIT_CACHE_BACKEND_NAME]
 
@@ -40,11 +43,21 @@ def resize(request, path_name, format, url):
     if not os.path.exists(path):
         return HttpResponse(status=404)
     image = Image(path=path)
-
     statobj = os.stat(image.path)
-    if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
-                              statobj[stat.ST_MTIME], statobj[stat.ST_SIZE]):
-        return HttpResponseNotModified(content_type=image.mimetype)
+
+    # django.views.static.was_modified_since dropped its size argument in 4.1.
+    sig = Signature(was_modified_since)
+
+    if not sig.parameters.get('size'):
+        if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
+                                  statobj[stat.ST_MTIME]):
+            return HttpResponseNotModified(content_type=image.mimetype)
+
+    if sig.parameters.get('size'):
+        if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
+                                  statobj[stat.ST_MTIME],
+                                  statobj[stat.ST_SIZE]):
+            return HttpResponseNotModified(content_type=image.mimetype)
 
     image.cached_name = request.META.get('PATH_INFO')
 

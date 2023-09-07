@@ -51,7 +51,7 @@ class Image(object):
     def resize(self, width=None, height=None):
         return self.pil.thumbnail(
             (int(width), int(height)),
-            PilImage.ANTIALIAS)
+            PilImage.LANCZOS)
 
     def crop(self, width=None, height=None):
         img_w, img_h = self.pil.size
