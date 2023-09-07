@@ -99,9 +99,11 @@ Imagefit is a resize service, therefore include its urls.
 Prefix it with whatever you want (here "imagefit" for example):
 
 ```python
+from django.urls import re_path
+
 urlpatterns = urlpatterns('',
     …
-    url(r'^imagefit/', include('imagefit.urls')),
+    re_path(r'^imagefit/', include('imagefit.urls')),
 )
 ```
 
