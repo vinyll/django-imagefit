@@ -3,7 +3,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import caches
 from django.utils.http import http_date
 from django.views.static import was_modified_since
-from inspect import Signature
+from inspect import signature
 
 
 from imagefit.conf import settings
@@ -46,7 +46,7 @@ def resize(request, path_name, format, url):
     statobj = os.stat(image.path)
 
     # django.views.static.was_modified_since dropped its size argument in 4.1.
-    sig = Signature(was_modified_since)
+    sig = signature(was_modified_since)
 
     if not sig.parameters.get('size'):
         if not was_modified_since(request.META.get('HTTP_IF_MODIFIED_SINCE'),
